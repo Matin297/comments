@@ -4,10 +4,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { CommentsProvider } from './store/comments-ctx';
+import { UserProvider } from './store/user-ctx';
+import { DialogProvider } from './store/dialog-ctx'
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <UserProvider>
+      <CommentsProvider>
+        <DialogProvider>
+          <App />
+        </DialogProvider>
+      </CommentsProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 
