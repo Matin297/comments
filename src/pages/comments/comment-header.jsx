@@ -11,7 +11,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const CommentHeader = ({ user, createdAt, id, parentId }) => {
+const CommentHeader = ({ user, createdAt, id, parentId, setComment }) => {
     const [loggedInUser] = useUser()
     const [, toggle] = useDialog()
 
@@ -20,6 +20,13 @@ const CommentHeader = ({ user, createdAt, id, parentId }) => {
 
     function onDeleteHandler() {
         toggle({ id, parentId })
+    }
+
+    const onEditOrReplyHandler = (type) => () => {
+        setComment({
+            show: true,
+            type
+        })
     }
 
     return (
@@ -35,10 +42,10 @@ const CommentHeader = ({ user, createdAt, id, parentId }) => {
                     isOwned ? (
                         <>
                             <Button onClick={onDeleteHandler} color='error' startIcon={<DeleteIcon />}>Delete</Button>
-                            <Button startIcon={<EditIcon />}>Edit</Button>
+                            <Button onClick={onEditOrReplyHandler('edit')} startIcon={<EditIcon />}>Edit</Button>
                         </>
                     ) :
-                        <Button size='small' startIcon={<ReplyIcon />}>Reply</Button>
+                        <Button onClick={onEditOrReplyHandler('reply')} size='small' startIcon={<ReplyIcon />}>Reply</Button>
                 }
             </Box>
         </Box>

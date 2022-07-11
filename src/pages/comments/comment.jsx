@@ -1,64 +1,16 @@
-import { styled } from '@mui/material/styles'
-import { useComments, updateComment } from '../../store/comments-ctx'
+import { useComments } from '../../store/comments-ctx'
 
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
+import CommentDetails from './comment-details'
 
-import Typography from '@mui/material/Typography'
-import MuiButtonGroup from '@mui/material/ButtonGroup'
-import IconButton from '@mui/material/IconButton'
+const Comment = (props) => {
+    const { user, replies, id } = props
 
-import CommentHeader from './comment-header'
-
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-
-const Comment = ({ id, content, createdAt, score, user, replies, parentId = 'p' }) => {
-    const [comments, dispatch] = useComments()
-
-    const voteHandler = (vote) => () => updateComment({ score: score + vote, id }, dispatch)
+    const [comments] = useComments()
 
     return (
         <Box display='flex' flexDirection='column' gap={2}>
-            {
-                user && (
-                    <Paper>
-                        <Box padding={2} display='flex' gap={2} alignItems='flex-start'>
-                            <ButtonGroup orientation='vertical' variant='text'>
-                                <IconButton onClick={voteHandler(1)}>
-                                    <AddIcon fontSize='small' />
-                                </IconButton>
-                                <Typography color='primary' fontWeight='bold'>{score}</Typography>
-                                <IconButton onClick={voteHandler(-1)}>
-                                    <RemoveIcon fontSize='small' />
-                                </IconButton>
-                            </ButtonGroup>
-
-                            <Box width='100%'>
-                                <CommentHeader 
-                                    user={user} 
-                                    createdAt={createdAt}
-                                    parentId={parentId}
-                                    id={id}
-                                />
-                                <Typography>
-                                    { 
-                                        parentId !== 'p' && 
-                                        <Typography 
-                                            color='primary' 
-                                            fontWeight='bold' 
-                                            component='span'
-                                        >
-                                            {`@${comments[parentId].user.username}`}
-                                        </Typography> 
-                                    }
-                                    {` ${content}`}
-                                </Typography>
-                            </Box>
-                        </Box>
-                    </Paper>
-                )
-            }
+            <CommentDetails {...props} />
             <Box 
                 paddingLeft={user ? 4 : 0}
                 sx={user && {
@@ -81,11 +33,3 @@ const Comment = ({ id, content, createdAt, score, user, replies, parentId = 'p' 
 
 export default Comment
 
-
-const ButtonGroup = styled(MuiButtonGroup)(({ theme }) => ({
-    backgroundColor: theme.palette.grey['100'],
-    textAlign: 'center',
-    '& svg': {
-        color: theme.palette.grey['400']
-    }
-}))

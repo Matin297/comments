@@ -9,7 +9,7 @@ const Comments = () => {
     const [comments] = useComments()
     return (
         <Box width='100%' maxWidth={900} marginX='auto'>
-            <Comment {...comments['p']} />
+            <Comment {...comments['p']} parentId='p' />
             <CommentForm />
             <RemoveCommentDialog />
         </Box>

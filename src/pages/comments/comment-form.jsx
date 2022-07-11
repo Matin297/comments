@@ -1,5 +1,5 @@
 import { useUser } from '../../store/user-ctx'
-import { useComments, addComment } from '../../store/comments-ctx'
+import { useComments, addComment, updateComment } from '../../store/comments-ctx'
 
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
@@ -7,16 +7,21 @@ import Avatar from '@mui/material/Avatar'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-const CommentForm = ({ parentId = 'p' }) => {
+const CommentForm = ({ parentId = 'p', content, commentId, closeCommentForm }) => {
     const [user] = useUser()
     const [, commentsDispatch] = useComments()
 
     function onSubmitHandler(e) {
         e.preventDefault()
-        const { content } = e.target.elements
-        const comment = { content: content.value, user }
-        addComment({ comment, parentId }, commentsDispatch)
-        content.value = ''
+        const { content: inputContent } = e.target.elements
+        if (content)
+            updateComment({ id: commentId, content: inputContent.value }, commentsDispatch)
+        else {
+            const comment = { content: inputContent.value, user }
+            addComment({ comment, parentId }, commentsDispatch)
+        }
+        inputContent.value = ''
+        closeCommentForm()
     }
 
     return (
@@ -37,6 +42,7 @@ const CommentForm = ({ parentId = 'p' }) => {
                     multiline 
                     rows={4}
                     sx={{ flexGrow: 1 }}
+                    defaultValue={content}
                 />
                 <Button type='submit' variant='contained'>Send</Button>
             </Box>
